@@ -1,164 +1,186 @@
-// js/ui.js
-class UIManager {
-    static init() {
-        this.elements = {
-            btnSettings: document.getElementById('btnSettings'),
-            settingsModal: document.getElementById('settingsModal'),
-            closeSettingsModal: document.getElementById('closeSettingsModal'),
-            apiKeyInput: document.getElementById('apiKeyInput'),
-            saveSettingsBtn: document.getElementById('saveSettingsBtn'),
-            keyStatus: document.getElementById('keyStatus'),
-            conceptInput: document.getElementById('conceptInput'),
-            generateBtn: document.getElementById('generateBtn'),
-            loadingState: document.getElementById('loadingState'),
-            loadingText: document.getElementById('loadingText'),
-            comicGrid: document.getElementById('comicGrid'),
-            emptyState: document.getElementById('emptyState'),
-            artStyleSelect: document.getElementById('artStyleSelect'),
-            modelSelect: document.getElementById('modelSelect'),
-            historyList: document.getElementById('historyList')
-        };
+// ============================================================
+// STORYFRAME STUDIO — UI Manager
+// ============================================================
 
-        this.bindEvents();
-        this.updateKeyStatus();
-        this.renderHistory();
+const UIManager = (() => {
+    const ICON = {
+        storyboard: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>',
+        image: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>',
+        gallery: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 13-1.296-1.296a2.41 2.41 0 0 0-3.408 0L11 18"/><circle cx="12" cy="8" r="2"/><rect width="16" height="16" x="6" y="2" rx="2"/></svg>',
+        settings: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>',
+        wand: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/><path d="m14 7 3 3"/><path d="M5 6v4"/><path d="M19 14v4"/><path d="M10 2v2"/><path d="M7 8H3"/><path d="M21 16h-4"/><path d="M11 3H9"/></svg>',
+        sparkles: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>',
+        download: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>',
+        key: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></svg>',
+        logout: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>',
+        zap: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>',
+        grid: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>',
+        user: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>',
+        pollen: '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>',
+    };
+
+    let currentPage = 'storyboard';
+
+    function el(id) { return document.getElementById(id); }
+
+    // ── Toast System ──
+    function toast(message, type = 'info') {
+        const container = el('toastContainer');
+        const t = document.createElement('div');
+        t.className = `sf-toast sf-toast-${type}`;
+        t.innerHTML = `<span>${message}</span>`;
+        container.appendChild(t);
+        setTimeout(() => { t.classList.add('removing'); }, 3000);
+        setTimeout(() => { t.remove(); }, 3400);
     }
 
-    static bindEvents() {
-        this.elements.btnSettings.addEventListener('click', () => this.toggleModal(true));
-        this.elements.closeSettingsModal.addEventListener('click', () => this.toggleModal(false));
-        this.elements.saveSettingsBtn.addEventListener('click', () => this.saveSettings());
-        
-        // Close modal on click outside
-        this.elements.settingsModal.addEventListener('click', (e) => {
-            if (e.target === this.elements.settingsModal) this.toggleModal(false);
-        });
+    // ── Navigation ──
+    function navigateTo(page) {
+        currentPage = page;
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.querySelectorAll('.sidebar-item[data-page]').forEach(i => i.classList.remove('active'));
 
-        // Initialize input
-        this.elements.apiKeyInput.value = StorageManager.getApiKey();
+        const target = el('page-' + page);
+        const navItem = document.querySelector(`.sidebar-item[data-page="${page}"]`);
+        if (target) target.classList.add('active');
+        if (navItem) navItem.classList.add('active');
+
+        // Update header title
+        const titles = { storyboard: 'Storyboard', studio: 'Image Studio', gallery: 'Gallery', settings: 'Settings' };
+        el('headerTitle').textContent = titles[page] || page;
+
+        if (page === 'gallery') {
+            GalleryManager.render(el('galleryGrid'));
+        }
     }
 
-    static toggleModal(show) {
-        const m = this.elements.settingsModal;
-        const c = document.getElementById('settingsContent');
-        if (show) {
-            m.classList.remove('hidden');
-            setTimeout(() => {
-                m.classList.remove('opacity-0');
-                c.classList.remove('scale-95');
-                c.classList.add('scale-100');
-            }, 10);
+    // ── Key Status ──
+    function updateKeyStatus() {
+        const indicator = el('keyStatus');
+        const sidebarAuth = el('sidebarAuthArea');
+        if (StorageManager.hasKey()) {
+            indicator.className = 'key-status connected';
+            indicator.innerHTML = `<span class="key-status-dot"></span> Connected`;
+
+            // Update sidebar user area
+            const profile = StorageManager.getUserProfile();
+            if (profile) {
+                const avatar = profile.picture
+                    ? `<img src="${profile.picture}" alt="">`
+                    : (profile.preferred_username || 'U').charAt(0).toUpperCase();
+                const avatarHTML = profile.picture
+                    ? `<div class="sidebar-user-avatar"><img src="${profile.picture}" alt=""></div>`
+                    : `<div class="sidebar-user-avatar">${avatar}</div>`;
+                sidebarAuth.innerHTML = `
+                    <div class="sidebar-user" onclick="UIManager.navigate('settings')">
+                        ${avatarHTML}
+                        <div class="sidebar-user-info">
+                            <div class="sidebar-user-name sf-truncate">${profile.preferred_username || profile.name || 'User'}</div>
+                            <div class="sidebar-user-tier">${profile.tier || 'Free'} tier</div>
+                        </div>
+                    </div>`;
+            } else {
+                sidebarAuth.innerHTML = `
+                    <div class="sidebar-user" onclick="UIManager.navigate('settings')">
+                        <div class="sidebar-user-avatar">${ICON.key}</div>
+                        <div class="sidebar-user-info">
+                            <div class="sidebar-user-name">Key Active</div>
+                            <div class="sidebar-user-tier">Session</div>
+                        </div>
+                    </div>`;
+            }
+
+            // Balance
+            const bal = StorageManager.getBalance();
+            const balEl = el('balancePill');
+            if (bal && balEl) {
+                const amount = typeof bal === 'object' ? (bal.remaining ?? bal.balance ?? '?') : bal;
+                balEl.innerHTML = `${ICON.pollen} <span>${amount} pollen</span>`;
+                balEl.style.display = 'flex';
+            }
         } else {
-            m.classList.add('opacity-0');
-            c.classList.remove('scale-100');
-            c.classList.add('scale-95');
-            setTimeout(() => m.classList.add('hidden'), 300);
+            indicator.className = 'key-status disconnected';
+            indicator.innerHTML = `<span class="key-status-dot"></span> No Key`;
+            sidebarAuth.innerHTML = `
+                <button class="sf-btn sf-btn-primary" style="width:100%" onclick="UIManager.navigate('settings')">
+                    ${ICON.key} Connect Account
+                </button>`;
+            const balEl = el('balancePill');
+            if (balEl) balEl.style.display = 'none';
         }
     }
 
-    static saveSettings() {
-        const val = this.elements.apiKeyInput.value.trim();
-        StorageManager.setApiKey(val);
-        this.updateKeyStatus();
-        this.toggleModal(false);
-    }
-
-    static updateKeyStatus() {
-        const hasKey = StorageManager.hasKey();
-        const stat = this.elements.keyStatus;
-        if (hasKey) {
-            stat.innerHTML = '<i data-lucide="check-circle" class="w-3 h-3"></i> Key Configured';
-            stat.className = 'text-xs px-2 py-1 bg-green-500/20 text-green-500 rounded-md flex items-center gap-1 cursor-pointer hover:bg-green-500/30';
-        } else {
-            stat.innerHTML = '<i data-lucide="key" class="w-3 h-3"></i> Missing Key';
-            stat.className = 'text-xs px-2 py-1 bg-red-500/20 text-red-500 rounded-md flex items-center gap-1 cursor-pointer hover:bg-red-500/30';
-        }
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-    }
-
-    static setLoading(isLoading, text = "Architecting Storyboard...") {
-        this.elements.generateBtn.disabled = isLoading;
-        this.elements.conceptInput.disabled = isLoading;
-        this.elements.loadingText.innerText = text;
+    // ── Loading ──
+    function setLoading(page, isLoading, text = '') {
+        const loadEl = el(page + 'Loading');
+        const contentEl = el(page + 'Content');
+        const emptyEl = el(page + 'Empty');
 
         if (isLoading) {
-            this.elements.comicGrid.innerHTML = '';
-            this.elements.emptyState.classList.add('hidden');
-            this.elements.loadingState.classList.remove('hidden');
-            this.elements.loadingState.classList.add('flex');
+            if (loadEl) { loadEl.classList.add('active'); loadEl.style.display = 'flex'; }
+            if (contentEl) contentEl.style.display = 'none';
+            if (emptyEl) emptyEl.style.display = 'none';
+            if (text && loadEl) {
+                const textEl = loadEl.querySelector('.loading-text');
+                if (textEl) textEl.textContent = text;
+            }
         } else {
-            this.elements.loadingState.classList.add('hidden');
-            this.elements.loadingState.classList.remove('flex');
+            if (loadEl) { loadEl.classList.remove('active'); loadEl.style.display = 'none'; }
+            if (contentEl) contentEl.style.display = '';
         }
     }
 
-    static renderHistory() {
-        const hList = StorageManager.getHistory();
-        this.elements.historyList.innerHTML = hList.map(h => `
-            <div class="p-3 bg-gray-950 border border-gray-800 rounded-lg hover:border-gray-700 cursor-pointer transition-colors group">
-                <div class="text-sm font-medium text-gray-200 truncate group-hover:text-blue-400">
-                    ${h.title}
-                </div>
-                <div class="text-xs text-gray-500 mt-1 truncate">
-                    ${h.concept}
-                </div>
-            </div>
-        `).join('');
-    }
+    // ── Render Storyboard Panels ──
+    function renderPanels(panels, styleValue, apiKey, imageModel) {
+        const grid = el('storyboardContent');
+        const empty = el('storyboardEmpty');
+        if (empty) empty.style.display = 'none';
+        if (!grid) return;
+        grid.style.display = '';
 
-    static renderPanels(panels, styleValue, apiKey) {
-        this.elements.emptyState.classList.add('hidden');
-        
-        const html = panels.map((prompt, index) => {
-            const imgUrl = ApiClient.getImageUrl(prompt, styleValue, index, apiKey);
-            
+        grid.innerHTML = panels.map((prompt, i) => {
+            const url = ApiClient.getImageUrl(prompt, styleValue, apiKey, { model: imageModel });
+            GalleryManager.addImage(url, prompt, imageModel, styleValue);
             return `
-                <div class="bg-gray-900 border border-gray-800 p-3 rounded-xl shadow-2xl panel-wrapper" style="animation-delay: ${index * 0.15}s">
-                    <div class="relative group overflow-hidden rounded-lg bg-gray-950 aspect-square">
-                        <!-- Standard Skeleton Loading -->
-                        <div class="absolute inset-0 skeleton-bg" id="skel-${index}"></div>
-                        
-                        <img src="${imgUrl}" alt="Panel ${index+1}" class="w-full h-full object-cover relative z-10 transition-opacity duration-300 opacity-0"
-                            onload="
-                                this.style.opacity='1'; 
-                                document.getElementById('skel-${index}').style.opacity='0';
-                                this.parentElement.nextElementSibling.classList.remove('opacity-0');
-                                this.parentElement.nextElementSibling.classList.add('opacity-100');
-                            ">
-                        
-                        <!-- Badge -->
-                        <div class="absolute top-3 left-3 bg-black/80 backdrop-blur-md text-white font-black text-sm px-3 py-1 rounded-md border border-gray-700/50 z-20 shadow-xl">
-                            Phase 0${index + 1}
+                <div class="panel-card" style="animation-delay: ${i * 0.12}s">
+                    <div class="panel-card-img">
+                        <div class="sf-skeleton" style="position:absolute;inset:0" id="skel-${i}"></div>
+                        <img src="${url}" alt="Panel ${i+1}" onload="this.classList.add('loaded');document.getElementById('skel-${i}').style.display='none'">
+                        <div class="panel-card-badge">PANEL ${String(i+1).padStart(2,'0')}</div>
+                        <div class="panel-card-overlay">
+                            <div class="panel-card-actions">
+                                <a href="${url}" download="panel-${i+1}.png" class="sf-btn sf-btn-sm sf-btn-secondary" onclick="event.stopPropagation()">${ICON.download} Save</a>
+                            </div>
                         </div>
-                        
-                        <!-- Hover Overlay -->
-                        <div class="absolute inset-0 bg-gradient-to-t from-gray-950 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity z-10 pointer-events-none"></div>
                     </div>
-                    
-                    <p class="text-gray-400 text-sm font-medium mt-4 px-2 pb-2 leading-relaxed tracking-wide opacity-0 transition-opacity duration-500 min-h-[4rem]">
-                        ${prompt}
-                    </p>
-                </div>
-            `;
-        });
-
-        this.elements.comicGrid.innerHTML = html.join('');
+                    <div class="panel-card-text">${prompt}</div>
+                </div>`;
+        }).join('');
     }
 
-    static showError(msg) {
-        this.elements.emptyState.classList.add('hidden');
-        this.elements.comicGrid.innerHTML = `
-            <div class="col-span-1 md:col-span-2 flex flex-col items-center justify-center p-8 border border-red-900/50 rounded-xl bg-red-950/20">
-                <i data-lucide="alert-triangle" class="text-red-500 w-12 h-12 mb-4"></i>
-                <h3 class="text-red-400 font-bold mb-1">Architecture Failure</h3>
-                <p class="text-red-300/80 text-center text-sm">${msg}</p>
-                <button onclick="UIManager.elements.btnSettings.click()" class="mt-4 px-4 py-2 bg-red-900/50 hover:bg-red-800/50 text-red-200 text-xs rounded-lg transition-colors border border-red-800/50">Open Settings</button>
-            </div>
-        `;
-        if (window.lucide) {
-            lucide.createIcons();
+    // ── Render History ──
+    function renderHistory() {
+        const list = el('historyList');
+        if (!list) return;
+        const items = StorageManager.getHistory();
+        if (!items.length) {
+            list.innerHTML = `<div style="padding: var(--sf-space-4); color: var(--sf-text-muted); font-size: var(--sf-text-xs); text-align: center;">No storyboards this session</div>`;
+            return;
         }
+        list.innerHTML = items.map(h => `
+            <div class="sidebar-item" onclick="document.getElementById('storyboardPrompt').value='${h.concept.replace(/'/g, "\\'")}'; UIManager.navigate('storyboard');">
+                <span class="sf-truncate" style="flex:1">${h.title}</span>
+            </div>`).join('');
     }
-}
+
+    return {
+        ICON,
+        toast,
+        navigate: navigateTo,
+        updateKeyStatus,
+        setLoading,
+        renderPanels,
+        renderHistory,
+        getCurrentPage() { return currentPage; }
+    };
+})();

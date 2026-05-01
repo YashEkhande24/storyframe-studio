@@ -3,152 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Infinite Storyboard | Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Storyframe Studio — AI Creative Workspace</title>
+    <meta name="description" content="Professional AI-powered storyboard and image generation studio. Bring your own key, choose from 30+ models, create stunning visual narratives.">
+    <meta name="theme-color" content="#08090d">
+    <meta property="og:title" content="Storyframe Studio">
+    <meta property="og:description" content="AI-powered creative workspace for storyboards and image generation.">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="css/design-system.css">
     <link rel="stylesheet" href="css/styles.css">
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body class="bg-gray-950 text-gray-200 font-sans h-screen overflow-hidden flex">
+<body>
+<div class="app-shell">
 
-    <!-- Sidebar -->
-    <aside class="w-80 bg-gray-900 border-r border-gray-800 flex flex-col h-full flex-shrink-0 transition-all duration-300">
-        <div class="p-6 border-b border-gray-800 flex items-center gap-3">
-            <i data-lucide="book-open" class="text-blue-500 w-6 h-6"></i>
-            <h1 class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                Storyboard Pro
-            </h1>
-        </div>
-
-        <div class="p-4 flex-1 overflow-y-auto custom-scrollbar">
-            <h2 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-4">Library</h2>
-            <div id="historyList" class="space-y-2">
-                <!-- History items injected here -->
+    <!-- ═══════════ SIDEBAR ═══════════ -->
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="sidebar-brand-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
             </div>
+            <span class="sidebar-brand-text">Storyframe</span>
         </div>
 
-        <div class="p-4 border-t border-gray-800 space-y-2">
-            <button id="btnSettings" class="flex items-center gap-3 hover:bg-gray-800 w-full p-3 rounded-lg transition-colors text-sm font-medium text-gray-300">
-                <i data-lucide="settings" class="w-5 h-5"></i> Settings (BYOK)
-            </button>
+        <nav class="sidebar-nav">
+            <div class="sidebar-section-title">Workspace</div>
+            <div class="sidebar-item active" data-page="storyboard">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
+                Storyboard
+            </div>
+            <div class="sidebar-item" data-page="studio">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                Image Studio
+            </div>
+            <div class="sidebar-item" data-page="gallery">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 22H4a2 2 0 0 1-2-2V6"/><path d="m22 13-1.296-1.296a2.41 2.41 0 0 0-3.408 0L11 18"/><circle cx="12" cy="8" r="2"/><rect width="16" height="16" x="6" y="2" rx="2"/></svg>
+                Gallery
+            </div>
+
+            <div class="sidebar-section-title" style="margin-top: var(--sf-space-4)">History</div>
+            <div id="historyList">
+                <div style="padding: var(--sf-space-4); color: var(--sf-text-muted); font-size: var(--sf-text-xs); text-align: center;">No storyboards this session</div>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="sidebar-item" data-page="settings">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                Settings
+            </div>
+            <hr class="sf-divider">
+            <div id="sidebarAuthArea">
+                <button class="sf-btn sf-btn-primary" style="width:100%" onclick="UIManager.navigate('settings')">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/><path d="m21 2-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/></svg>
+                    Connect Account
+                </button>
+            </div>
         </div>
     </aside>
 
-    <!-- Main Content -->
-    <main class="flex-1 flex flex-col h-full relative overflow-y-auto custom-scrollbar">
-        <!-- Top Navigation -->
-        <header class="h-16 border-b border-gray-800/60 bg-gray-950/80 backdrop-blur-md sticky top-0 z-10 flex items-center justify-between px-8">
-            <div class="flex items-center gap-4">
-                <h2 class="text-lg font-medium text-gray-100" id="currentProjectTitle">New Project</h2>
+    <!-- ═══════════ MAIN ═══════════ -->
+    <main class="main-content">
+        <header class="main-header">
+            <div class="main-header-left">
+                <h1 id="headerTitle" class="main-header-title">Storyboard</h1>
             </div>
-            <div class="flex items-center gap-3">
-                <select id="modelSelect" class="bg-gray-900 border border-gray-700 text-sm rounded-lg px-3 py-1.5 focus:ring-blue-500 focus:border-blue-500 text-gray-300 w-40">
-                    <option value="openai">GPT-4o (OpenAI)</option>
-                    <option value="openai-large">GPT-4o Large (OpenAI)</option>
-                    <option value="claude">Claude 3.5 Sonnet</option>
-                    <option value="gemini">Gemini 1.5</option>
-                    <option value="deepseek">DeepSeek</option>
-                    <option value="llama">Llama 3</option>
-                </select>
-                <select id="artStyleSelect" class="bg-gray-900 border border-gray-700 text-sm rounded-lg px-3 py-1.5 focus:ring-blue-500 focus:border-blue-500 text-gray-300 w-48">
-                    <option value="graphic novel art style, vibrant colors, clear outlines, comic book illustration">Graphic Novel</option>
-                    <option value="manga art style, black and white, screentones, highly detailed, dramatic lighting">Manga (B&W)</option>
-                    <option value="cyberpunk aesthetic, neon lighting, highly detailed, complex cityscapes, futuristic">Cyberpunk</option>
-                    <option value="noir aesthetic, high contrast, black and white, dramatic shadows, cinematic">Noir</option>
-                    <option value="watercolor illustration, pastel colors, soft edges, studio ghibli style">Studio Ghibli</option>
-                </select>
+            <div class="main-header-right">
+                <div id="balancePill" class="balance-pill" style="display:none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>
+                    <span>—</span>
+                </div>
+                <div id="keyStatus" class="key-status disconnected" onclick="UIManager.navigate('settings')">
+                    <span class="key-status-dot"></span> No Key
+                </div>
             </div>
         </header>
 
-        <!-- Editor Area -->
-        <div class="max-w-5xl w-full mx-auto p-8 flex-1 flex flex-col">
-            
-            <div class="bg-gray-900/50 border border-gray-800 rounded-xl p-6 shadow-2xl mb-8 backdrop-blur-sm">
-                <label for="conceptInput" class="block text-sm font-semibold text-gray-400 mb-2 flex justify-between items-center">
-                    <span>Scene Description</span>
-                    <span id="keyStatus" class="text-xs px-2 py-1 bg-red-500/20 text-red-500 rounded-md flex items-center gap-1 cursor-pointer hover:bg-red-500/30" onclick="document.getElementById('btnSettings').click()">
-                        <i data-lucide="key" class="w-3 h-3"></i> Missing Key
-                    </span>
-                </label>
-                <div class="flex gap-4">
-                    <textarea 
-                        id="conceptInput" 
-                        rows="3"
-                        class="flex-1 bg-gray-950/50 text-gray-100 border border-gray-700 rounded-lg p-4 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all resize-none custom-scrollbar"
-                        placeholder="Describe your story in detail. The more context you provide, the better the final storyboard..."></textarea>
-                </div>
-                <div class="mt-4 flex justify-between items-center">
-                    <div class="text-xs text-gray-500 flex items-center gap-2">
-                        <i data-lucide="info" class="w-4 h-4"></i>
-                        Uses Pollinations AI for narrative architecture and rendering.
+        <!-- ═══ PAGE: Storyboard ═══ -->
+        <div id="page-storyboard" class="page active">
+            <div class="workspace">
+                <div class="prompt-card sf-card">
+                    <div class="prompt-label">
+                        <span class="prompt-label-text">Scene Description</span>
+                        <span class="sf-badge sf-badge-outline" style="font-size: 10px;">Ctrl+Enter to generate</span>
                     </div>
-                    <button 
-                        id="generateBtn"
-                        class="bg-blue-600 hover:bg-blue-500 text-white font-semibold py-2.5 px-6 rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg shadow-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                        <i data-lucide="wand-2" class="w-4 h-4"></i>
-                        <span>Generate Sequence</span>
-                    </button>
+                    <textarea id="storyboardPrompt" class="prompt-textarea" placeholder="Describe your story in detail — a hero's journey through a cyberpunk city, a space opera unfolding across galaxies, or a quiet moment in a Studio Ghibli forest..."></textarea>
+
+                    <div class="prompt-controls">
+                        <div class="prompt-selectors">
+                            <div class="selector-group">
+                                <label class="selector-label">Text Model</label>
+                                <select id="textModelSelect" class="sf-select">
+                                    <option value="openai">Loading models...</option>
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label class="selector-label">Image Model</label>
+                                <select id="imageModelSelect" class="sf-select">
+                                    <option value="flux">Loading models...</option>
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label class="selector-label">Art Style</label>
+                                <select id="artStyleSelect" class="sf-select">
+                                    <option value="cinematic, dramatic lighting, film grain, 35mm photography">Cinematic</option>
+                                    <option value="graphic novel art style, vibrant colors, clear outlines, comic book illustration">Graphic Novel</option>
+                                    <option value="manga art style, black and white, screentones, highly detailed, dramatic lighting">Manga</option>
+                                    <option value="cyberpunk aesthetic, neon lighting, highly detailed, complex cityscapes, futuristic">Cyberpunk</option>
+                                    <option value="noir aesthetic, high contrast, black and white, dramatic shadows">Noir</option>
+                                    <option value="watercolor illustration, pastel colors, soft edges, studio ghibli style">Ghibli</option>
+                                    <option value="renaissance oil painting, dramatic chiaroscuro, rich textures">Renaissance</option>
+                                    <option value="pixel art, retro game style, 16-bit aesthetic, vibrant colors">Pixel Art</option>
+                                    <option value="">No Style (raw prompt)</option>
+                                </select>
+                            </div>
+                            <div class="selector-group">
+                                <label class="selector-label">Panels</label>
+                                <select id="panelCountSelect" class="sf-select">
+                                    <option value="4">4 Panels</option>
+                                    <option value="6">6 Panels</option>
+                                    <option value="8">8 Panels</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button id="storyboardGenBtn" class="sf-btn sf-btn-primary sf-btn-lg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+                            Generate
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Loading State -->
+                <div id="storyboardLoading" class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Generating storyboard...</div>
+                    <div class="loading-sub">This may take 15-30 seconds</div>
+                </div>
+
+                <!-- Panel Grid -->
+                <div id="storyboardContent" class="panel-grid" style="display:none"></div>
+
+                <!-- Empty State -->
+                <div id="storyboardEmpty" class="empty-state">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/></svg>
+                    <h3>No storyboard yet</h3>
+                    <p>Describe a scene above and generate a multi-panel visual narrative powered by AI.</p>
                 </div>
             </div>
+        </div>
 
-            <!-- Loading State -->
-            <div id="loadingState" class="hidden flex-col items-center justify-center py-20 flex-1">
-                <div class="spinner mb-6"></div>
-                <h3 class="text-xl font-medium text-blue-400 mb-2">Architecting Storyboard</h3>
-                <p id="loadingText" class="text-gray-500 font-medium animate-pulse">Initializing language model...</p>
+        <!-- ═══ PAGE: Image Studio ═══ -->
+        <div id="page-studio" class="page">
+            <div class="studio-layout">
+                <div id="studioCanvas" class="studio-canvas">
+                    <div class="studio-canvas-empty">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+                        <h3>Image Studio</h3>
+                        <p>Configure your prompt and settings, then generate.</p>
+                    </div>
+                </div>
+                <aside class="sf-card">
+                    <div class="studio-sidebar-inner">
+                        <div class="studio-field">
+                            <label class="studio-field-label">Prompt</label>
+                            <textarea id="studioPrompt" class="sf-input sf-textarea" placeholder="A serene mountain lake at golden hour with perfect reflections..." rows="4"></textarea>
+                        </div>
+                        <div class="studio-field">
+                            <label class="studio-field-label">Image Model</label>
+                            <select id="studioImageModel" class="sf-select" style="width:100%">
+                                <option value="flux">Loading...</option>
+                            </select>
+                        </div>
+                        <div class="studio-field">
+                            <label class="studio-field-label">Dimensions</label>
+                            <div class="studio-dimensions">
+                                <div>
+                                    <label style="font-size:var(--sf-text-xs);color:var(--sf-text-muted)">Width</label>
+                                    <select id="studioWidth" class="sf-select" style="width:100%">
+                                        <option value="512">512</option>
+                                        <option value="768">768</option>
+                                        <option value="1024" selected>1024</option>
+                                        <option value="1280">1280</option>
+                                        <option value="1536">1536</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="font-size:var(--sf-text-xs);color:var(--sf-text-muted)">Height</label>
+                                    <select id="studioHeight" class="sf-select" style="width:100%">
+                                        <option value="512">512</option>
+                                        <option value="768">768</option>
+                                        <option value="1024" selected>1024</option>
+                                        <option value="1280">1280</option>
+                                        <option value="1536">1536</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="studio-field">
+                            <label class="studio-field-label">Seed (optional)</label>
+                            <input id="studioSeed" type="number" class="sf-input sf-input-mono" placeholder="Random">
+                        </div>
+                        <button id="studioGenBtn" class="sf-btn sf-btn-primary sf-btn-lg" style="width:100%;margin-top:var(--sf-space-2)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/></svg>
+                            Generate Image
+                        </button>
+                    </div>
+                </aside>
             </div>
+        </div>
 
-            <!-- Comic Grid Output -->
-            <div id="comicGrid" class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full pb-10">
-                <!-- Images will be injected here -->
+        <!-- ═══ PAGE: Gallery ═══ -->
+        <div id="page-gallery" class="page">
+            <div class="workspace">
+                <div id="galleryGrid" class="gallery-grid"></div>
             </div>
-            
-            <!-- Empty State -->
-            <div id="emptyState" class="flex-1 flex flex-col items-center justify-center text-gray-600">
-                <i data-lucide="layout-grid" class="w-16 h-16 mb-4 opacity-50"></i>
-                <p class="text-lg">No sequence generated yet.</p>
-                <p class="text-sm mt-1">Enter a prompt above to architect a new storyboard.</p>
+        </div>
+
+        <!-- ═══ PAGE: Settings ═══ -->
+        <div id="page-settings" class="page">
+            <div class="workspace">
+                <div class="settings-grid">
+                    <div class="settings-section sf-card">
+                        <h2 class="settings-title">Authentication</h2>
+                        <p class="settings-desc">Connect your Pollinations account or paste an API key. All credentials are stored in session memory only — nothing persists after you close this tab.</p>
+
+                        <div style="display:flex;flex-direction:column;gap:var(--sf-space-4)">
+                            <button id="oauthBtn" class="sf-btn sf-btn-primary sf-btn-lg" style="width:100%">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg>
+                                Sign in with Pollinations
+                            </button>
+                            <div style="text-align:center;color:var(--sf-text-muted);font-size:var(--sf-text-xs);font-weight:600;text-transform:uppercase;letter-spacing:0.1em">or paste your key</div>
+                            <div>
+                                <label style="font-size:var(--sf-text-xs);font-weight:600;color:var(--sf-text-tertiary);text-transform:uppercase;letter-spacing:0.06em;display:block;margin-bottom:var(--sf-space-2)">API Key</label>
+                                <input type="password" id="apiKeyInput" class="sf-input sf-input-mono" placeholder="pk_... or sk_...">
+                                <p style="font-size:var(--sf-text-xs);color:var(--sf-text-muted);margin-top:var(--sf-space-2)">Get your key from <a href="https://enter.pollinations.ai/" target="_blank">enter.pollinations.ai</a>. Stored in sessionStorage only. Never leaves your browser.</p>
+                            </div>
+                            <div style="display:flex;gap:var(--sf-space-3)">
+                                <button id="saveKeyBtn" class="sf-btn sf-btn-secondary" style="flex:1">Save Key</button>
+                                <button id="logoutBtn" class="sf-btn sf-btn-danger">Disconnect</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section sf-card">
+                        <h2 class="settings-title">About</h2>
+                        <p class="settings-desc">Storyframe Studio is an open-source, BYOK (Bring Your Own Key) creative workspace built on the Pollinations API. Your API key, your pollen, your images.</p>
+                        <div style="display:flex;flex-direction:column;gap:var(--sf-space-2);font-size:var(--sf-text-sm);color:var(--sf-text-tertiary);">
+                            <div><strong style="color:var(--sf-text-secondary)">Version:</strong> 2.0.0</div>
+                            <div><strong style="color:var(--sf-text-secondary)">Storage:</strong> Session-only (cleared on tab close)</div>
+                            <div><strong style="color:var(--sf-text-secondary)">Source:</strong> <a href="https://github.com/YashEkhande24/storyframe-studio" target="_blank">GitHub</a></div>
+                            <div><strong style="color:var(--sf-text-secondary)">API:</strong> <a href="https://gen.pollinations.ai/docs" target="_blank">Pollinations API Reference</a></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+</div>
 
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
-        <div class="bg-gray-900 border border-gray-800 p-8 rounded-2xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300" id="settingsContent">
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="settings" class="w-6 h-6 text-blue-500"></i> Local Configurations</h2>
-                <button id="closeSettingsModal" class="text-gray-500 hover:text-gray-300 transition-colors">
-                    <i data-lucide="x" class="w-6 h-6"></i>
-                </button>
-            </div>
-            
-            <div class="space-y-6">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Pollinations API Key (BYOK)</label>
-                    <input type="password" id="apiKeyInput" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-white font-mono text-sm" placeholder="pk_... or sk_...">
-                    <p class="text-xs text-gray-500 mt-2">Get your key from <a href="https://enter.pollinations.ai/" target="_blank" class="text-blue-400 hover:underline">enter.pollinations.ai</a>. Stored safely in localStorage. Never leaves this browser.</p>
-                </div>
-                
-                <div class="pt-4 border-t border-gray-800">
-                    <button id="saveSettingsBtn" class="w-full bg-white text-gray-950 font-bold py-3 rounded-lg hover:bg-gray-200 transition-colors">
-                        Save Identity
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Toast Container -->
+<div id="toastContainer" class="sf-toast-container"></div>
 
-    <!-- Scripts -->
-    <script src="js/storage.js"></script>
-    <script src="js/api.js"></script>
-    <script src="js/ui.js"></script>
-    <script src="js/app.js"></script>
-    <script>
-        // Initialize Lucide icons (if CDN loaded)
-        if (window.lucide) {
-            lucide.createIcons();
-        }
-    </script>
+<!-- Lightbox -->
+<div id="lightbox" class="lightbox-overlay">
+    <img src="" alt="Lightbox preview">
+</div>
+
+<!-- Scripts -->
+<script src="js/storage.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/models.js"></script>
+<script src="js/api.js"></script>
+<script src="js/gallery.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>
