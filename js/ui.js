@@ -15,6 +15,7 @@ class UIManager {
             comicGrid: document.getElementById('comicGrid'),
             emptyState: document.getElementById('emptyState'),
             artStyleSelect: document.getElementById('artStyleSelect'),
+            modelSelect: document.getElementById('modelSelect'),
             historyList: document.getElementById('historyList')
         };
 

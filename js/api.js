@@ -1,6 +1,6 @@
 // js/api.js
 class ApiClient {
-    static async generatePanels(concept, apiKey) {
+    static async generatePanels(concept, apiKey, modelName = "openai") {
         if (!apiKey) throw new Error("API Key is missing. Please configure it in settings.");
         
         const systemPrompt = `You are a professional storyboard architect. 
@@ -8,14 +8,14 @@ class ApiClient {
         Provide a visual descripion for each panel, separated ONLY by the exact delimiter '|||'.
         Respond with nothing else. No prefixes, no panel numbers.`;
 
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        const response = await fetch("https://gen.pollinations.ai/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${apiKey}`
             },
             body: JSON.stringify({
-                model: "gpt-3.5-turbo",
+                model: modelName,
                 messages: [
                     { role: "system", content: systemPrompt },
                     { role: "user", content: concept }
@@ -27,11 +27,17 @@ class ApiClient {
 
         if (!response.ok) {
             const error = await response.json();
-            throw new Error(error.error?.message || "Failed to generate sequence from OpenAI");
+            throw new Error(error.error?.message || "Failed to generate sequence from Pollinations AI");
         }
 
         const data = await response.json();
-        const textData = data.choices[0].message.content;
+        let textData = "";
+        
+        if (data.choices && data.choices[0] && data.choices[0].message) {
+            textData = data.choices[0].message.content;
+        } else {
+            throw new Error("Invalid response format from Pollinations API");
+        }
         
         let panels = textData.split('|||').map(p => p.trim()).filter(p => p.length > 5);
         if (panels.length < 4) {
@@ -44,6 +50,6 @@ class ApiClient {
     static getImageUrl(panelPrompt, style, index) {
         const fullPrompt = `${panelPrompt}. ${style}`;
         const randomSeed = Math.floor(Math.random() * 9999999);
-        return `https://image.pollinations.ai/prompt/${encodeURIComponent(fullPrompt)}?seed=${randomSeed}&width=1024&height=1024&nologo=true`;
+        return `https://gen.pollinations.ai/image/${encodeURIComponent(fullPrompt)}?seed=${randomSeed}&width=1024&height=1024&nologo=true`;
     }
 }

@@ -42,6 +42,14 @@
                 <h2 class="text-lg font-medium text-gray-100" id="currentProjectTitle">New Project</h2>
             </div>
             <div class="flex items-center gap-3">
+                <select id="modelSelect" class="bg-gray-900 border border-gray-700 text-sm rounded-lg px-3 py-1.5 focus:ring-blue-500 focus:border-blue-500 text-gray-300 w-40">
+                    <option value="openai">GPT-4o (OpenAI)</option>
+                    <option value="openai-large">GPT-4o Large (OpenAI)</option>
+                    <option value="claude">Claude 3.5 Sonnet</option>
+                    <option value="gemini">Gemini 1.5</option>
+                    <option value="deepseek">DeepSeek</option>
+                    <option value="llama">Llama 3</option>
+                </select>
                 <select id="artStyleSelect" class="bg-gray-900 border border-gray-700 text-sm rounded-lg px-3 py-1.5 focus:ring-blue-500 focus:border-blue-500 text-gray-300 w-48">
                     <option value="graphic novel art style, vibrant colors, clear outlines, comic book illustration">Graphic Novel</option>
                     <option value="manga art style, black and white, screentones, highly detailed, dramatic lighting">Manga (B&W)</option>
@@ -72,7 +80,7 @@
                 <div class="mt-4 flex justify-between items-center">
                     <div class="text-xs text-gray-500 flex items-center gap-2">
                         <i data-lucide="info" class="w-4 h-4"></i>
-                        Uses OpenAI for narrative architecture and Pollinations for rendering.
+                        Uses Pollinations AI for narrative architecture and rendering.
                     </div>
                     <button 
                         id="generateBtn"
@@ -117,9 +125,9 @@
             
             <div class="space-y-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">OpenAI API Key (BYOK)</label>
-                    <input type="password" id="apiKeyInput" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-white font-mono text-sm" placeholder="sk-...">
-                    <p class="text-xs text-gray-500 mt-2">Required for text generation. Stored safely in localStorage. Never leaves this browser.</p>
+                    <label class="block text-sm font-medium text-gray-300 mb-2">Pollinations API Key (BYOK)</label>
+                    <input type="password" id="apiKeyInput" class="w-full bg-gray-950 border border-gray-700 rounded-lg px-4 py-3 focus:ring-2 focus:ring-blue-500 outline-none text-white font-mono text-sm" placeholder="pk_... or sk_...">
+                    <p class="text-xs text-gray-500 mt-2">Get your key from <a href="https://enter.pollinations.ai/" target="_blank" class="text-blue-400 hover:underline">enter.pollinations.ai</a>. Stored safely in localStorage. Never leaves this browser.</p>
                 </div>
                 
                 <div class="pt-4 border-t border-gray-800">

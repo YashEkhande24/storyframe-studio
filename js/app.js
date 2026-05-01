@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
         lucide.createIcons();
     }
 
-    const { generateBtn, conceptInput, artStyleSelect } = UIManager.elements;
+    const { generateBtn, conceptInput, artStyleSelect, modelSelect } = UIManager.elements;
 
     // 2. Bind Generate Action
     generateBtn.addEventListener('click', async () => {
@@ -24,10 +24,10 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        UIManager.setLoading(true, "Architecting narrative via OpenAI...");
+        UIManager.setLoading(true, `Architecting narrative via ${modelSelect.options[modelSelect.selectedIndex].text}...`);
 
         try {
-            const panels = await ApiClient.generatePanels(concept, apiKey);
+            const panels = await ApiClient.generatePanels(concept, apiKey, modelSelect.value);
             
             if (!panels || panels.length === 0) {
                 throw new Error("No sequence was returned from the language model.");

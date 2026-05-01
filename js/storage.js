@@ -1,11 +1,12 @@
 // js/storage.js
 class StorageManager {
     static getApiKey() {
-        return localStorage.getItem('sb_openai_key') || '';
+        // Fallback to old key if new doesn't exist
+        return localStorage.getItem('sb_pollinations_key') || localStorage.getItem('sb_openai_key') || '';
     }
 
     static setApiKey(key) {
-        localStorage.setItem('sb_openai_key', key);
+        localStorage.setItem('sb_pollinations_key', key);
     }
 
     static hasKey() {
