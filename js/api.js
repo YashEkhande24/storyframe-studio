@@ -47,9 +47,10 @@ class ApiClient {
         return panels.slice(0, 4);
     }
 
-    static getImageUrl(panelPrompt, style, index) {
+    static getImageUrl(panelPrompt, style, index, apiKey) {
         const fullPrompt = `${panelPrompt}. ${style}`;
         const randomSeed = Math.floor(Math.random() * 9999999);
-        return `https://gen.pollinations.ai/image/${encodeURIComponent(fullPrompt)}?seed=${randomSeed}&width=1024&height=1024&nologo=true`;
+        const keyParam = apiKey ? `&key=${encodeURIComponent(apiKey)}` : '';
+        return `https://gen.pollinations.ai/image/${encodeURIComponent(fullPrompt)}?seed=${randomSeed}&width=1024&height=1024&nologo=true${keyParam}`;
     }
 }

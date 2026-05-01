@@ -114,7 +114,7 @@
     </main>
 
     <!-- Settings Modal -->
-    <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden items-center justify-center opacity-0 transition-opacity duration-300">
+    <div id="settingsModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center opacity-0 transition-opacity duration-300">
         <div class="bg-gray-900 border border-gray-800 p-8 rounded-2xl max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300" id="settingsContent">
             <div class="flex justify-between items-center mb-6">
                 <h2 class="text-2xl font-bold flex items-center gap-2"><i data-lucide="settings" class="w-6 h-6 text-blue-500"></i> Local Configurations</h2>
@@ -145,8 +145,10 @@
     <script src="js/ui.js"></script>
     <script src="js/app.js"></script>
     <script>
-        // Initialize Lucide icons
-        lucide.createIcons();
+        // Initialize Lucide icons (if CDN loaded)
+        if (window.lucide) {
+            lucide.createIcons();
+        }
     </script>
 </body>
 </html>

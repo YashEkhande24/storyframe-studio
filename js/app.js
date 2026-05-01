@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', () => {
             UIManager.renderHistory();
 
             // Render
-            UIManager.renderPanels(panels, artStyleSelect.value);
+            UIManager.renderPanels(panels, artStyleSelect.value, apiKey);
 
         } catch (error) {
             console.error("Error during generation:", error);

@@ -73,7 +73,9 @@ class UIManager {
             stat.innerHTML = '<i data-lucide="key" class="w-3 h-3"></i> Missing Key';
             stat.className = 'text-xs px-2 py-1 bg-red-500/20 text-red-500 rounded-md flex items-center gap-1 cursor-pointer hover:bg-red-500/30';
         }
-        lucide.createIconsFn ? lucide.createIconsFn() : (window.lucide && lucide.createIcons());
+        if (window.lucide) {
+            lucide.createIcons();
+        }
     }
 
     static setLoading(isLoading, text = "Architecting Storyboard...") {
@@ -106,11 +108,11 @@ class UIManager {
         `).join('');
     }
 
-    static renderPanels(panels, styleValue) {
+    static renderPanels(panels, styleValue, apiKey) {
         this.elements.emptyState.classList.add('hidden');
         
         const html = panels.map((prompt, index) => {
-            const imgUrl = ApiClient.getImageUrl(prompt, styleValue, index);
+            const imgUrl = ApiClient.getImageUrl(prompt, styleValue, index, apiKey);
             
             return `
                 <div class="bg-gray-900 border border-gray-800 p-3 rounded-xl shadow-2xl panel-wrapper" style="animation-delay: ${index * 0.15}s">
@@ -155,6 +157,8 @@ class UIManager {
                 <button onclick="UIManager.elements.btnSettings.click()" class="mt-4 px-4 py-2 bg-red-900/50 hover:bg-red-800/50 text-red-200 text-xs rounded-lg transition-colors border border-red-800/50">Open Settings</button>
             </div>
         `;
-        lucide.createIconsFn ? lucide.createIconsFn() : (window.lucide && lucide.createIcons());
+        if (window.lucide) {
+            lucide.createIcons();
+        }
     }
 }
